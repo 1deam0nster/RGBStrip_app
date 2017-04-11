@@ -2,7 +2,7 @@
   <v-app top-toolbar>
     <header>
       <v-toolbar>
-        <v-toolbar-logo>Vuetify</v-toolbar-logo>
+        <v-toolbar-logo>RGB Strip</v-toolbar-logo>
         <v-toolbar-items>
           <v-toolbar-item>
 
@@ -19,22 +19,22 @@
               <v-container fluid>
                 <v-row>
                   <v-col xs9>
-                    <v-slider label="R" light v-bind:max="255" v-model="getcolor.r" />
+                    <v-slider label="R" light v-bind:max="255" v-model="getcolor.r" v-on:input="postRGB"/>
                   </v-col>
                   <v-col xs3>
-                    <v-text-field light v-model="getcolor.r" type="number" />
+                    <v-text-field light v-model="getcolor.r" type="number" v-on:input="postRGB"/>
                   </v-col>
                   <v-col xs9>
-                    <v-slider label="G" light v-bind:max="255" v-model="getcolor.g" />
+                    <v-slider label="G" light v-bind:max="255" v-model="getcolor.g" v-on:input="postRGB"/>
                   </v-col>
                   <v-col xs3>
-                    <v-text-field light v-model="getcolor.g" type="number" />
+                    <v-text-field light v-model="getcolor.g" type="number" v-on:input="postRGB"/>
                   </v-col>
                   <v-col xs9>
-                    <v-slider label="B" light v-bind:max="255" v-model="getcolor.b" v-on:click="postRGB"/>
+                    <v-slider label="B" light v-bind:max="255" v-model="getcolor.b" v-on:input="postRGB"/>
                   </v-col>
                   <v-col xs3>
-                    <v-text-field light v-model="getcolor.b" type="number" v-on:submit.prevent="postRGB"/>
+                    <v-text-field light v-model="getcolor.b" type="number" v-on:input="postRGB"/>
                   </v-col>
                 </v-row>
               </v-container>
@@ -50,25 +50,28 @@
   export default {
     data () {
       return {
-        endpoint: 'https://api.spark.io/v1/devices/3b0041000747343232363230/rgb?access_token=ba2b57075f7261d9751ef46c50fe3440d5ef1c8d',
-        r: '',
-        g: '',
-        b: '',
         getcolor: []
       }
     },
     methods: {
       getRGB: function() {
-        this.$http.get(this.endpoint).then(function(response) {
+        var url = 'https://api.spark.io/v1/devices/3b0041000747343232363230/rgb?access_token=ba2b57075f7261d9751ef46c50fe3440d5ef1c8d';
+        this.$http.get(url).then(function(response) {
           this.getcolor = JSON.parse(response.data.result);
           console.log(response.data)
         },  function(error) {
-          console.log("error!")
+          console.log("Error get!")
         })
       },
-      postRGB: function (event) {
-        console.log("push!");
-        alert('Hello');
+      postRGB: function () {
+        var command = this.getcolor.r + ',' + this.getcolor.g + ',' + this.getcolor.b;
+        var url = 'https://api.spark.io/v1/devices/3b0041000747343232363230/setRgb?access_token=ba2b57075f7261d9751ef46c50fe3440d5ef1c8d';
+
+        this.$http.post(url, { args: command }).then(function(response) {
+            console.log("Sucess post")
+        },  function(error) {
+            console.log("Error post!")
+        })
       }
     },
     created: function() {
