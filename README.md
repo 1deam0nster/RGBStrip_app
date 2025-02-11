@@ -1,6 +1,6 @@
-# RGB Led Strip with Particle.io
+# RGB Led Strip UI with Particle.io
 
-> A Vue.js project controll panel for RGB Strip with Particle.io, all code with backend coming soon.
+> A Vue.js project controll panel for RGB Strip with Particle.io, UI by Vuetifyjs.
 
 ## Build Setup
 
